@@ -1,0 +1,24 @@
+$blue: #4066A5;
+$black:#131821;
+$dark-gray:#6A707B;
+$lite-grey:#E3E3E4;
+$lite-shade:#F2F5FA;
+$lite-gradient:linear-gradient(180deg, #FFFFFF 0%, #F2F5FA 100%);
+
+/**mixing**/
+@mixin flex-row {
+    display: flex;
+    flex-direction: row;
+}
+
+@mixin flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+
+@mixin media {
+  @media (min-width: 1200px) {
+    @content;
+  }
+}

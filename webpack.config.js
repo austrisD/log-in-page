@@ -1,7 +1,6 @@
 const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
-
 module.exports = {
   output: {
     path: path.resolve(__dirname, "build"),
@@ -15,7 +14,6 @@ module.exports = {
   },
   module: {
     rules: [
-      
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
@@ -23,31 +21,29 @@ module.exports = {
           loader: "babel-loader",
         },
       },
-
       {
-        test: /\.(css|scss)$/,
+        test: /\.(png|jpe?g|gif)$/i,
+        loader: "file-loader",
+        options: {
+          outputPath: 'images',
+        },
+      },
+      {
+        test: /\.s[ac]ss$/i,
         use: [
-          {
-            loader: "style-loader",
-          },
-          {
-            loader: "css-loader",
-          },
+          // Creates `style` nodes from JS strings
+          "style-loader",
+          // Translates CSS into CommonJS
+          "css-loader",
+          // Compiles Sass to CSS
+          "sass-loader",
         ],
       },
 
       {
-        test: /\.(png|jp(e*)g|svg|gif)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "images/[hash]-[name].[ext]",
-            },
-          },
-        ],
+        test: /\.svg$/,
+        use: ["@svgr/webpack"],
       },
-
     ],
   },
   plugins: [
