@@ -17,23 +17,23 @@ import Youtube__hover from "../assets/youtube__hover.svg";
 import Youtube__pressed from "../assets/youtube__presed.svg";
 
 const Footer = () => {
-  const [FacebookIcon, setFacebookIcon] = useState(Facebook__normal);
-  const [TwitterIcon, setTwitterIcon] = useState(Twitter__normal);
-  const [InstagramIcon, setInstagramIcon] = useState(Instagram__normal);
-  const [YoutubeIcon, setYoutubeIcon] = useState(Youtube__normal);
+  const [FacebookIcon, setFacebookIcon] = useState(<Facebook__normal/>);
+  const [TwitterIcon, setTwitterIcon] = useState(<Twitter__normal/>);
+  const [InstagramIcon, setInstagramIcon] = useState(<Instagram__normal/>);
+  const [YoutubeIcon, setYoutubeIcon] = useState(<Youtube__normal/>);
   return (
     <footer className="footer">
       <a
         href="#"
         className="facebook__icon social__icon"
         onClick={() => {
-          setFacebookIcon(Facebook__pressed);
+          setFacebookIcon(<Facebook__pressed />);
         }}
         onMouseEnter={() => {
-          setFacebookIcon(Facebook__hover);
+          setFacebookIcon(<Facebook__hover />);
         }}
         onMouseLeave={() => {
-          setFacebookIcon(Facebook__normal);
+          setFacebookIcon(<Facebook__normal/>);
         }}
       >
         {FacebookIcon}
@@ -43,13 +43,13 @@ const Footer = () => {
         href="#"
         className="twitter__icon social__icon"
         onClick={() => {
-          setTwitterIcon(Twitter__pressed);
+          setTwitterIcon(<Twitter__pressed/>);
         }}
         onMouseEnter={() => {
-          setTwitterIcon(Twitter__hover);
+          setTwitterIcon(<Twitter__hover/>);
         }}
         onMouseLeave={() => {
-          setTwitterIcon(Twitter__normal);
+          setTwitterIcon(<Twitter__normal/>);
         }}
       >
         {TwitterIcon}
@@ -59,13 +59,13 @@ const Footer = () => {
         href="#"
         className="instagram__icon social__icon"
         onClick={() => {
-          setInstagramIcon(Instagram__pressed);
+          setInstagramIcon(<Instagram__pressed/>);
         }}
         onMouseEnter={() => {
-          setInstagramIcon(Instagram__Hover);
+          setInstagramIcon(<Instagram__Hover/>);
         }}
         onMouseLeave={() => {
-          setInstagramIcon(Instagram__normal);
+          setInstagramIcon(<Instagram__normal/>);
         }}
       >
         {InstagramIcon}
@@ -75,13 +75,13 @@ const Footer = () => {
         href="#"
         className="Youtube__icon social__icon"
         onClick={() => {
-          setYoutubeIcon(Youtube__pressed);
+          setYoutubeIcon(<Youtube__pressed/>);
         }}
         onMouseEnter={() => {
-          setYoutubeIcon(Youtube__hover);
+          setYoutubeIcon(<Youtube__hover/>);
         }}
         onMouseLeave={() => {
-          setYoutubeIcon(Youtube__normal);
+          setYoutubeIcon(<Youtube__normal/>);
         }}
       >
         {YoutubeIcon}

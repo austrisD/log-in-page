@@ -1,78 +1,99 @@
-import React, { useState } from "react";
+import React from "react";
 import Arrow_left from "../assets/arrow__left.svg";
-import Footer from "./Footer";
 import CheckBoxActive from "../assets/checkbox__active.svg";
 
-const Main = () => {
-  const [IsCheckBoxClicked, setIsCheckBoxClicked] = useState(false);
-  const [IsEmailInputActive, setEmailInputActive] = useState(false);
+const emailReEex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
 
-  return (
-    <>
-      <main className="main">
-        <div className="main__heading">
-          <h2>Subscribe to newsletter</h2>
-          <p>
-            Subscribe to our newsletter and get 10% discount on pineapple
-            glasses.
-          </p>
-        </div>
+export default class Main extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { CheckBoxActive: false, email: "" };
 
-        <form method="post" className="subscribe__form" target="self">
-          <label
-            htmlFor="email"
-            className="form__email"
-            style={
-              IsEmailInputActive === true
-                ? { boxShadow: "0px 30px 40px 0px #1317200f" }
-                : { boxShadow: "none" }
-            }
-          >
-            <input
-              type="email"
-              name="email"
-              id="form_email"
-              className="email__input"
-              placeholder="Type your email address here…"
-              onFocus={() => {
-                setEmailInputActive(true);
-              }}
-            />
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
-            <button
-              type="submit"
-              className="form__submit"
-              onClick={(event) => {
-                event.preventDefault();
-              }}
-            >
-              <Arrow_left className="btn__svg" />
-            </button>
-          </label>
+  handleSubmit(event) {
+    // alert("A name was submitted: " + this.state.value + this.state.email);
+    // console.log(this.state.CheckBoxActive);
+    // console.log(this.state.email);
+    // console.log(values);
+    console.log(this.state);
 
-          <div className="form__checkbox">
-            <label className="checkbox__edit">
-              {IsCheckBoxClicked === true ? <CheckBoxActive /> : ""}
-              <input
-                type="checkbox"
-                className="checkbox"
-                onClick={(event) => {
-                  event.target.checked === true
-                    ? setIsCheckBoxClicked(true)
-                    : setIsCheckBoxClicked(false);
-                }}
-              ></input>
-            </label>
-            I agree to
-            <a href="#" className="termsLink">
-              terms of service
-            </a>
+    console.log(emailReEex.test(this.state.email));
+    if (emailReEex.test(this.state.email)) return;
+    event.preventDefault();
+  }
+
+  render() {
+    return (
+      <>
+        <main className="main">
+          <div className="main__heading">
+            <h2>Subscribe to newsletter</h2>
+            <p>
+              Subscribe to our newsletter and get 10% discount on pineapple
+              glasses.
+            </p>
           </div>
-        </form>
-        <Footer />
-      </main>
-    </>
-  );
-};
 
-export default Main;
+          <form
+            method="post"
+            className="subscribe__form"
+            target="self"
+            onSubmit={(values) => this.handleSubmit(values)}
+          >
+            <label htmlFor="email" className="form__email">
+              <input
+                type="email"
+                name="email"
+                className="email__input"
+                value={this.state.email}
+                onChange={(event) =>
+                  this.setState({ email: event.target.value })
+                }
+                placeholder="Type your email address here…"
+              />
+
+              <button
+                type="submit"
+                className="form__submit"
+                disabled={!this.state.CheckBoxActive}
+              >
+                <Arrow_left className="btn__svg" />
+              </button>
+            </label>
+            <p className="Form__error">Error text</p>
+
+            <div className="form__checkbox">
+              <label className="checkbox__edit">
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  value={this.state.CheckBoxActive}
+                  onClick={() =>
+                    this.setState(
+                      this.state.CheckBoxActive == false
+                        ? { CheckBoxActive: true }
+                        : { CheckBoxActive: false }
+                    )
+                  }
+                ></input>
+                <CheckBoxActive
+                  style={
+                    this.state.CheckBoxActive === true
+                      ? { display: "block" }
+                      : { display: "none" }
+                  }
+                />
+              </label>
+              I agree to
+              <a href="#" className="termsLink">
+                terms of service
+              </a>
+            </div>
+          </form>
+        </main>
+      </>
+    );
+  }
+}

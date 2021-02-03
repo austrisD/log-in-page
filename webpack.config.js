@@ -1,17 +1,23 @@
 const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 module.exports = {
   output: {
+    filename: "main.js",
     path: path.resolve(__dirname, "build"),
-    filename: "bundle.js",
+    assetModuleFilename: "./[name].[ext]",
   },
-  resolve: {
-    modules: [path.join(__dirname, "src"), "node_modules"],
-    alias: {
-      react: path.join(__dirname, "node_modules", "react"),
-    },
-  },
+  plugins: [
+    new HtmlWebPackPlugin({
+      template: "./index.html",
+    }),
+    new MiniCssExtractPlugin({
+      filename: "./css/[name].css",
+      chunkFilename: "[id].css",
+    }),
+  ],
   module: {
     rules: [
       {
@@ -21,34 +27,40 @@ module.exports = {
           loader: "babel-loader",
         },
       },
+
       {
-        test: /\.(png|jpe?g|gif)$/i,
-        loader: "file-loader",
-        options: {
-          outputPath: 'images',
-        },
-      },
-      {
-        test: /\.s[ac]ss$/i,
+        test: /\.(css|sass|scss)$/,
         use: [
-          // Creates `style` nodes from JS strings
-          "style-loader",
-          // Translates CSS into CommonJS
+          MiniCssExtractPlugin.loader,
           "css-loader",
-          // Compiles Sass to CSS
+          "postcss-loader",
           "sass-loader",
         ],
+        type: "javascript/auto",
+      },
+
+      {
+        test: /\.(png|jpe?g|gif')$/i,
+        loader: "file-loader",
+        options: {
+          name: "images/[name].[ext]",
+        },
+        type: "javascript/auto",
+      },
+
+      {
+        test: /\.(php)$/i,
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]",
+        },
+        type: "javascript/auto",
       },
 
       {
         test: /\.svg$/,
-        use: ["@svgr/webpack"],
+        use: ["@svgr/webpack"]
       },
     ],
   },
-  plugins: [
-    new HtmlWebPackPlugin({
-      template: "./index.html",
-    }),
-  ],
 };
