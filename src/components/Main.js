@@ -2,14 +2,13 @@ import React from "react";
 import Arrow_left from "../assets/arrow__left.svg";
 import CheckBoxActive from "../assets/checkbox__active.svg";
 
-const emailReEex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { CheckBoxActive: false, email: "" };
+    this.state = { CheckBoxActive: false, email: "", error: "" };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleErrors = this.handleErrors.bind(this);
   }
 
   handleSubmit(event) {
@@ -17,11 +16,44 @@ export default class Main extends React.Component {
     // console.log(this.state.CheckBoxActive);
     // console.log(this.state.email);
     // console.log(values);
-    console.log(this.state);
+    // event.preventDefault();
+    // if (emailReEex.test(this.state.email)) {
+    //   this.state.error = "Please provide a valid e-mail address";
+    // }
+    // console.log(emailReEex.test(this.state.email));
+    // if (emailReEex.test(this.state.email));
+  }
 
-    console.log(emailReEex.test(this.state.email));
-    if (emailReEex.test(this.state.email)) return;
-    event.preventDefault();
+  handleErrors() {
+    const email = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    const WrongEmail = !email.test(this.state.email);
+
+    const ColombiaEmails = /^[\w-\.]+@([\w-]+\.)+(co)$/g;
+    const ColombiaEmailsTest = ColombiaEmails.test(this.state.email);
+
+    const termsFalse = this.state.CheckBoxActive != true;
+
+    if (WrongEmail) {
+      this.setState({ error: "Please provide a valid e-mail address" });
+      console.log("WrongEmail");
+    }
+
+    if (ColombiaEmailsTest) {
+      console.log("CO email");
+      this.setState({
+        error: "We are not accepting subscriptions from Colombia emails",
+      });
+    }
+
+    if (termsFalse) {
+      this.setState({ error: "You must accept the terms and conditions" });
+      console.log("teamsFalse");
+    }
+
+    if (!WrongEmail && !termsFalse && !ColombiaEmailsTest) {
+      this.setState({ error: "" });
+      console.log("reset");
+    }
   }
 
   render() {
@@ -40,6 +72,7 @@ export default class Main extends React.Component {
             method="post"
             className="subscribe__form"
             target="self"
+            action="server.php"
             onSubmit={(values) => this.handleSubmit(values)}
           >
             <label htmlFor="email" className="form__email">
@@ -51,6 +84,7 @@ export default class Main extends React.Component {
                 onChange={(event) =>
                   this.setState({ email: event.target.value })
                 }
+                onBlur={this.handleErrors}
                 placeholder="Type your email address here…"
               />
 
@@ -62,21 +96,23 @@ export default class Main extends React.Component {
                 <Arrow_left className="btn__svg" />
               </button>
             </label>
-            <p className="Form__error">Error text</p>
-
+            <p className="Form__error">{this.state.error}</p>
             <div className="form__checkbox">
-              <label className="checkbox__edit">
+              <label className="checkbox__edit" onClick={this.handleErrors}>
                 <input
                   type="checkbox"
                   className="checkbox"
                   value={this.state.CheckBoxActive}
-                  onClick={() =>
+                  onClick={() => {
                     this.setState(
                       this.state.CheckBoxActive == false
                         ? { CheckBoxActive: true }
                         : { CheckBoxActive: false }
-                    )
-                  }
+                    );
+                    if (this.state.CheckBoxActive) {
+                      this.setState({ error: "" });
+                    }
+                  }}
                 ></input>
                 <CheckBoxActive
                   style={

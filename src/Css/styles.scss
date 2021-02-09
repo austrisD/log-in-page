@@ -40,6 +40,8 @@
     background-color: transparent;
     padding: 0;
     margin-right: 100px;
+    height: fit-content;
+    margin-bottom: 0;
   }
   .header__logo {
     @include flex-row;
@@ -59,6 +61,9 @@
   .navbar {
     @include flex-row;
     gap: 20px;
+    @include media() {
+      align-items: flex-end;
+    }
     a {
       text-decoration: none;
       line-height: 66px;
@@ -67,6 +72,9 @@
       font-weight: normal;
       font-size: 14px;
       color: #6a707b;
+      @include media() {
+        line-height: 26px;
+      }
     }
   }
 }
@@ -96,7 +104,7 @@
   max-width: 335px;
   padding: 20px 30px;
   @include media() {
-    background: none;
+    background: transparent;
     margin: 0;
     padding: 0;
   }
@@ -105,6 +113,10 @@
 .main {
   background: $lite-gradient;
   font-family: Arial, Helvetica, sans-serif;
+  @include media(){
+    margin-top: 234px;
+    background: transparent;
+  }
   .main__heading {
     margin-bottom: 20px;
     @include media() {
@@ -277,7 +289,6 @@
   position: absolute;
   color: red;
   font-weight: 400;
-  margin-left: 10px;
   transform: translateY(67px);
   font-size: 15px;
   @include media() {
@@ -321,6 +332,51 @@
       animation-duration: 500ms;
       animation-iteration-count: 1;
       animation-direction: 1;
+    }
+  }
+}
+
+/*Subscribed styles*/
+
+.SC__warper {
+  background: transparent;
+  @include media(){
+    margin-top: 131px;
+  }
+  .SC__icon {
+    margin-top: 10px;
+    margin-bottom: 39px;
+    @include media() {
+      margin-bottom: 30px;
+      margin-top: 0;
+    }
+  }
+  .SC__heading {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 34px;
+    margin-bottom: 10px;
+    color: $black;
+    @include media() {
+      font-size: 32px;
+      line-height: 44px;
+      margin-bottom: 20px;
+    }
+  }
+  .SC__paragraph {
+    font-family: Arial;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 26px;
+    margin-bottom: 39px;
+    color: $dark-gray;
+    @include media() {
+      font-size: 16px;
+      line-height: 28px;
+      margin-bottom: 50px;
     }
   }
 }

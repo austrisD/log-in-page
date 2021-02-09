@@ -16,7 +16,6 @@ $lite-gradient:linear-gradient(180deg, #FFFFFF 0%, #F2F5FA 100%);
     flex-direction: column;
 }
 
-
 @mixin media {
   @media (min-width: 1200px) {
     @content;
