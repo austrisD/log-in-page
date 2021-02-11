@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import Arrow_left from "../assets/arrow__left.svg";
 import CheckBoxActiveIcon from "../assets/checkbox__active.svg";
+import Subscribed from "./Subscribed";
 
 export default function Main() {
   const [Email, setEmail] = useState("");
   const [CheckBoxActive, setCheckBoxActive] = useState(false);
   const [Error, setError] = useState("");
+  const [IsSubscribed, setIsSubscribed] = useState(false);
 
   function handleSubmit(event) {
     sessionStorage.setItem("subscribed", true);
     console.log("submit");
+    setIsSubscribed(true);
     event.preventDefault();
   }
 
@@ -45,7 +48,12 @@ export default function Main() {
 
   return (
     <>
-      <main className="main">
+      <main
+        className="main"
+        style={
+          IsSubscribed === true ? { display: "none" } : { display: "block" }
+        }
+      >
         <div className="main__heading">
           <h2>Subscribe to newsletter</h2>
           <p>
@@ -115,6 +123,7 @@ export default function Main() {
           <p className="Form__error">{Error}</p>
         </form>
       </main>
+      {IsSubscribed === true ? <Subscribed /> : ""}
     </>
   );
 }
