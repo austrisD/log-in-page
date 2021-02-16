@@ -23,7 +23,17 @@ class Connection
     public function get__data()
     {
         if ($this->pdo != null) {
-            $data = $this->pdo->prepare("SELECT * FROM $this->database");
+            $data = $this->pdo->prepare("SELECT * FROM $this->database order by date limit 10");
+            $data->execute();
+            return $data->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return null;
+        }
+    }
+    public function custom__data($statements)
+    {
+        if ($this->pdo != null) {
+            $data = $this->pdo->prepare("SELECT * FROM `$this->database` $statements");
             $data->execute();
             return $data->fetchAll(PDO::FETCH_ASSOC);
         } else {
@@ -32,14 +42,12 @@ class Connection
     }
     public function Send__data($value)
     {
-        $data = $this->pdo->prepare("INSERT INTO $this->database ( email ) VALUES (:email);");
-        $data->bindValue('email', $value['email']);
+        $data = $this->pdo->prepare("INSERT INTO $this->database ( email ) VALUES $value;");
         return $data->execute();
     }
-    public function delete__data($value)
+    public function delete__data($statements)
     {
-        $data = $this->pdo->prepare("DELETE FROM $this->database WHERE id = :id");
-        $data->bindValue('id', $value);
+        $data = $this->pdo->prepare("DELETE FROM $this->database WHERE id $statements");
         return $data->execute();
     }
 }

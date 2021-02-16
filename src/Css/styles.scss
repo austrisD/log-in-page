@@ -113,7 +113,7 @@
 .main {
   background: $lite-gradient;
   font-family: Arial, Helvetica, sans-serif;
-  @include media(){
+  @include media() {
     margin-top: 234px;
     background: transparent;
   }
@@ -255,12 +255,6 @@
         margin-right: 15px;
         background-size: cover;
         background-repeat: no-repeat;
-        .checkbox {
-          display: none;
-          width: initial;
-          height: initial;
-          margin: 0;
-        }
       }
       a {
         margin-left: 3px;
@@ -285,16 +279,34 @@
     }
   }
 }
+
 .Form__error {
   position: absolute;
   color: red;
   font-weight: 400;
-  transform: translateY(67px);
-  font-size: 15px;
+  left: 50%;
+  transform: translate(-50%, 67px);
+  font-size: 12px;
   @include media() {
-    transform: translateY(80px);
     font-size: 20px;
+    left: unset;
+    transform: translate(0, 80px);
   }
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.ErrorDelay {
+  opacity: 1;
+  animation-name: appear;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-direction: alternate;
 }
 
 @keyframes softTransfer {
@@ -324,6 +336,12 @@
     svg {
       box-sizing: border-box;
     }
+    .Facebook__hover,
+    .Twitter__hover,
+    .Instagram__Hover,
+    .Youtube__hover {
+      display: none;
+    }
 
     &:hover {
       box-shadow: 0px 20px 40px 0px rgba(56, 70, 97, 0.3);
@@ -332,6 +350,18 @@
       animation-duration: 500ms;
       animation-iteration-count: 1;
       animation-direction: 1;
+      .Facebook__normal,
+      .Twitter__normal,
+      .Instagram__normal,
+      .Youtube__normal {
+        display: none;
+      }
+      .Facebook__hover,
+      .Twitter__hover,
+      .Instagram__Hover,
+      .Youtube__hover {
+        display: block;
+      }
     }
   }
 }
@@ -340,7 +370,7 @@
 
 .SC__warper {
   background: transparent;
-  @include media(){
+  @include media() {
     margin-top: 131px;
   }
   .SC__icon {

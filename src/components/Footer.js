@@ -17,77 +17,93 @@ import Youtube__hover from "../assets/youtube__hover.svg";
 import Youtube__pressed from "../assets/youtube__presed.svg";
 
 const Footer = () => {
-  const [FacebookIcon, setFacebookIcon] = useState(<Facebook__normal/>);
-  const [TwitterIcon, setTwitterIcon] = useState(<Twitter__normal/>);
-  const [InstagramIcon, setInstagramIcon] = useState(<Instagram__normal/>);
-  const [YoutubeIcon, setYoutubeIcon] = useState(<Youtube__normal/>);
+  const [FacebookIconClicked, setFacebookIconClicked] = useState(false);
+  const [TwitterIcon, setTwitterIcon] = useState(false);
+  const [InstagramIcon, setInstagramIcon] = useState(false);
+  const [YoutubeIcon, setYoutubeIcon] = useState(false);
   return (
     <footer className="footer">
       <a
         href="#"
         className="facebook__icon social__icon"
         onClick={() => {
-          setFacebookIcon(<Facebook__pressed />);
+          setFacebookIconClicked(true);
         }}
-        onMouseEnter={() => {
-          setFacebookIcon(<Facebook__hover />);
-        }}
-        onMouseLeave={() => {
-          setFacebookIcon(<Facebook__normal/>);
+        onMouseOut={() => {
+          setFacebookIconClicked(false);
         }}
       >
-        {FacebookIcon}
+        {FacebookIconClicked === true ? (
+          <Facebook__pressed />
+        ) : (
+          <>
+            <Facebook__normal className="Facebook__normal" />
+            <Facebook__hover className="Facebook__hover" />
+          </>
+        )}
       </a>
-
       <a
         href="#"
         className="twitter__icon social__icon"
         onClick={() => {
-          setTwitterIcon(<Twitter__pressed/>);
+          setTwitterIcon(true);
         }}
-        onMouseEnter={() => {
-          setTwitterIcon(<Twitter__hover/>);
-        }}
-        onMouseLeave={() => {
-          setTwitterIcon(<Twitter__normal/>);
+        onMouseOut={() => {
+          setTwitterIcon(false);
         }}
       >
-        {TwitterIcon}
+        {TwitterIcon === true ? (
+          <Twitter__pressed />
+        ) : (
+          <>
+            <Twitter__normal className="Twitter__normal" />
+            <Twitter__hover className="Twitter__hover" />
+          </>
+        )}
       </a>
-
       <a
         href="#"
         className="instagram__icon social__icon"
         onClick={() => {
-          setInstagramIcon(<Instagram__pressed/>);
+          setInstagramIcon(true);
         }}
-        onMouseEnter={() => {
-          setInstagramIcon(<Instagram__Hover/>);
-        }}
-        onMouseLeave={() => {
-          setInstagramIcon(<Instagram__normal/>);
+        onMouseOut={() => {
+          setInstagramIcon(false);
         }}
       >
-        {InstagramIcon}
+        {InstagramIcon === true ? (
+          <Instagram__pressed />
+        ) : (
+          <>
+            <Instagram__normal className="Instagram__normal" />
+            <Instagram__Hover className="Instagram__Hover" />
+          </>
+        )}
       </a>
 
       <a
         href="#"
         className="Youtube__icon social__icon"
         onClick={() => {
-          setYoutubeIcon(<Youtube__pressed/>);
+          setYoutubeIcon(true);
         }}
-        onMouseEnter={() => {
-          setYoutubeIcon(<Youtube__hover/>);
-        }}
-        onMouseLeave={() => {
-          setYoutubeIcon(<Youtube__normal/>);
+        onMouseOut={() => {
+          setYoutubeIcon(false);
         }}
       >
-        {YoutubeIcon}
+        {YoutubeIcon === true ? (
+          <Youtube__pressed />
+        ) : (
+          <>
+            <Youtube__normal className="Youtube__normal" />
+            <Youtube__hover className="Youtube__hover" />
+          </>
+        )}
       </a>
     </footer>
   );
 };
 
 export default Footer;
+
+//fix element hover 

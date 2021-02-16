@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Arrow_left from "../assets/arrow__left.svg";
 import CheckBoxActiveIcon from "../assets/checkbox__active.svg";
 import Subscribed from "./Subscribed";
@@ -8,43 +8,51 @@ export default function Main() {
   const [CheckBoxActive, setCheckBoxActive] = useState(false);
   const [Error, setError] = useState("");
   const [IsSubscribed, setIsSubscribed] = useState(false);
+  const [ErrorDelay, setErrorDelay] = useState("");
 
-  function handleSubmit(event) {
-    sessionStorage.setItem("subscribed", true);
+  const email = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+  const WrongEmail = !email.test(Email);
+  const emailBlackList = /^[\w-\.]+@([\w-]+\.)+(co)$/g;
+  const emailBlackListTest = emailBlackList.test(Email);
+
+  function handleSubmit() {
     console.log("submit");
     setIsSubscribed(true);
-    event.preventDefault();
+    sessionStorage.setItem("subscribed", true);
+    document.form.target = "myActionWin";
+    window.open("", "myActionWin", "width=500,height=300,toolbar=0");
+    document.form.submit();
   }
 
-  function handleErrors() {
-    const email = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
-    const WrongEmail = !email.test(Email);
-    const emailBlackList = /^[\w-\.]+@([\w-]+\.)+(co)$/g;
-    const emailBlackListTest = emailBlackList.test(Email);
-    const emptyEmailField = Email.length == 0;
-
+  function handleInputErrors() {
     if (CheckBoxActive === false) {
+      setErrorDelay("ErrorDelay");
       setError("You must accept the terms and conditions");
     }
 
     if (WrongEmail) {
+      setErrorDelay("ErrorDelay");
       setError("Please provide a valid e-mail address");
     }
 
     if (emailBlackListTest) {
+      setErrorDelay("ErrorDelay");
       setError("We are not accepting subscriptions from Colombia emails");
     }
 
-    if (!WrongEmail && emptyEmailField && CheckBoxActive) {
-      setError("");
-    }
-    if (!emailBlackListTest) {
+    if (!WrongEmail && !emailBlackListTest && CheckBoxActive) {
+      setErrorDelay("");
       setError("");
     }
 
     //form does not remove terms if checkbox clicked
     // form after submitting does not change.
   }
+  useEffect(() => {
+    if (Email != "") {
+      handleInputErrors();
+    }
+  }, [CheckBoxActive, Email]);
 
   return (
     <>
@@ -65,17 +73,28 @@ export default function Main() {
         <form
           method="post"
           className="subscribe__form"
-          target="self"
+          target="_blank"
           action="server.php"
+          name="form"
           onSubmit={(values) => handleSubmit(values)}
+          noValidate
         >
-          <label htmlFor="email" className="form__email">
+          <label
+            htmlFor="email"
+            className="form__email"
+            style={
+              Error.search("Please provide") != -1 ||
+              Error.search("Colombia emails") != -1
+                ? { borderColor: "red" }
+                : {}
+            }
+          >
             <input
               type="email"
               name="email"
               className="email__input"
               onChange={(event) => setEmail(event.target.value)}
-              onBlur={handleErrors}
+              // onBlur={handleInputErrors}
               placeholder="Type your email address here…"
               value={Email}
             />
@@ -94,11 +113,11 @@ export default function Main() {
               htmlFor="terms"
               onClick={() => {
                 if (CheckBoxActive === false) {
+                  setErrorDelay("ErrorDelay");
                   setCheckBoxActive(true);
-                  setError("");
                 } else {
                   setCheckBoxActive(false);
-                  setError("You must accept the terms and conditions");
+                  setErrorDelay("");
                 }
               }}
               style={
@@ -107,12 +126,7 @@ export default function Main() {
                   : { borderColor: "#e3e3e4" }
               }
             >
-              <input
-                type="checkbox"
-                className="checkbox"
-                name="terms"
-                value={CheckBoxActive}
-              ></input>
+              <input type="hidden" name="terms" value={CheckBoxActive} />
               {CheckBoxActive === true ? <CheckBoxActiveIcon /> : ""}
             </label>
             I agree to
@@ -120,7 +134,7 @@ export default function Main() {
               terms of service
             </a>
           </div>
-          <p className="Form__error">{Error}</p>
+          <p className={`Form__error ${ErrorDelay}`}>{Error}</p>
         </form>
       </main>
       {IsSubscribed === true ? <Subscribed /> : ""}
