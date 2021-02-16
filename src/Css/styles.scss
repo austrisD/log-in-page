@@ -3,12 +3,18 @@
 
 .root__container {
   @include media() {
+<<<<<<< HEAD
     display: flex;
     @include flex-row;
     min-height: 100vh;
     height: 100%;
     margin: 0 auto;
     max-width: 2300px;
+=======
+    height: 100vh;
+    width: calc(100vw - 680px);
+    background-position-x: 0;
+>>>>>>> 5554d37d280e701981633ce0cae591f399b90e97
   }
 }
 
@@ -114,15 +120,27 @@
   background: $lite-gradient;
   font-family: Arial, Helvetica, sans-serif;
   @include media() {
+<<<<<<< HEAD
     margin-top: 234px;
+=======
+    position: absolute;
+    left: 0;
+    top: 375px;
+    transform: none;
+    margin-left: 120px;
+>>>>>>> 5554d37d280e701981633ce0cae591f399b90e97
     background: transparent;
+    max-width: 400px;
   }
   .main__heading {
     margin-bottom: 20px;
     @include media() {
       margin-bottom: 50px;
+<<<<<<< HEAD
       margin-left: 36px;
       background: none;
+=======
+>>>>>>> 5554d37d280e701981633ce0cae591f399b90e97
     }
     h2 {
       font-family: Georgia, "Times New Roman", Times, serif;
@@ -158,7 +176,10 @@
   .subscribe__form {
     @include flex-col;
     margin-bottom: 21px;
+<<<<<<< HEAD
     background-color: transparent;
+=======
+>>>>>>> 5554d37d280e701981633ce0cae591f399b90e97
     @include media() {
       margin-bottom: 51px;
     }
@@ -169,12 +190,17 @@
       background-color: #fff;
       margin-bottom: 21px;
       width: 100%;
+
       @include flex-row;
       align-items: center;
       justify-content: space-between;
       transition: 200ms;
       @include media() {
         margin-bottom: 54px;
+<<<<<<< HEAD
+=======
+        margin-left: -40px;
+>>>>>>> 5554d37d280e701981633ce0cae591f399b90e97
         width: 663px;
       }
 
@@ -327,7 +353,10 @@
   @include media() {
     padding-top: 50px;
     gap: 20px;
+<<<<<<< HEAD
     margin-left: 36px;
+=======
+>>>>>>> 5554d37d280e701981633ce0cae591f399b90e97
   }
   .social__icon {
     border-radius: 50%;
