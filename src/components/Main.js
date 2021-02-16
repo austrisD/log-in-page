@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import React from "react";
 import Arrow_left from "../assets/arrow__left.svg";
 import CheckBoxActiveIcon from "../assets/checkbox__active.svg";
 import Subscribed from "./Subscribed";
