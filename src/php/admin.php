@@ -1,37 +1,72 @@
 <?php
 $connection = include_once "./connections.php";
-if (isset($_GET["deleteMultiple"]) && $_GET["deleteMultiple"] != "" ) {
+if (isset($_GET["deleteMultiple"]) && $_GET["deleteMultiple"] != "") {
     //when multiple checkboxes is set and delete btn is pushed.
     $deleteStatement = "IN " . $_GET["deleteMultiple"];
     $connection->delete__data($deleteStatement);
     unset($_GET["deleteMultiple"]);
 }
-if (isset($_GET["deleteSingle"]) && $_GET["deleteSingle"] != "" ) {
+if (isset($_GET["deleteSingle"]) && $_GET["deleteSingle"] != "") {
     //when delete btn in row is used.
-    $deleteStatement = "IN (".$_GET["deleteSingle"].")";
+    $deleteStatement = "IN (" . $_GET["deleteSingle"] . ")";
     $connection->delete__data($deleteStatement);
     unset($_GET["deleteSingle"]);
 }
 
-if (count($_GET) == 0) {
-    //if custom view not defined.
-    $emails = $connection->get__data();
-} elseif ($_GET["email_select"] != "All") {
-    //if specific emails provider selected.
-    $statement = "WHERE `email` LIKE '%" . $_GET['email_select'] . "%'";
-    $emails = $connection->custom__data($statement);
-} elseif ($_GET["email_select"] == "All") {
-    //if search bar used  , must change statement.
-    $statement = "WHERE `email` LIKE '%" . $_GET['search'] . "%'";
-    $emails = $connection->custom__data($statement);
+$selectedEmailCount = isset($_GET["selectedEmailCount"]) ? intval($_GET["selectedEmailCount"]) : 10;
+$emailSearchRange = $selectedEmailCount;
+$justConnected = count($_GET) != 0;
+$emailsSelectUsed = isset($_GET["email_select"]) && $_GET['email_select'] != "select" ? true : false;
+$emailsSelectAll = isset($_GET["email_select"]) && $_GET["email_select"] == "All" ? true : false;
+$searchBarUsed = isset($_GET["search"]) && strlen($_GET['search']) != 0 ? true : false;
+$PageChangeBtnPushed = isset($_GET["btnPushed"]);
+$searchValue = "";
+
+session_start();
+$currentState = $_SESSION['currentEmailLimit'] ?? 0;
+if ($PageChangeBtnPushed) {
+    if ($_GET["btnPushed"] == "next") {
+        $limitNR = $currentState + $selectedEmailCount;
+        $emailSearchRange = $limitNR . ', ' . $selectedEmailCount;
+    }
+    if ($_GET["btnPushed"] == "back") {
+        $limitNR = $currentState - $selectedEmailCount;
+        if ($limitNR < 0) {$limitNR = 0;}
+        $emailSearchRange = $limitNR . ', ' . $selectedEmailCount;
+    }
+    $_SESSION['currentEmailLimit'] = isset($limitNR) ? $limitNR : 0;
+    unset($_GET["btnPushed"]);
 }
 
+if ($emailsSelectAll) {
+    $statement = "limit " . $emailSearchRange;
+    $emails = $connection->custom__data($statement);
+
+    unset($_GET["email_select"]);
+} elseif ($emailsSelectUsed) {
+    $statement = "WHERE `email` LIKE '%" . $_GET['email_select'] . "%' limit " . $emailSearchRange;
+    $emails = $connection->custom__data($statement);
+
+    unset($_GET["email_select"]);
+} elseif ($searchBarUsed) {
+    $statement = "WHERE `email` LIKE '%" . $_GET['search'] . "%' limit " . $emailSearchRange;
+    $emails = $connection->custom__data($statement);
+
+    $searchValue = isset($_GET["search"]) ? $_GET["search"] : "";
+    //displaying searched value is searchbox
+    unset($_GET["search"]);
+    unset($_GET["email_select"]);
+} elseif ($justConnected) {
+    //if custom view not defined.
+    $statement = "limit " . $emailSearchRange;
+    $emails = $connection->custom__data($statement);
+
+} else {
+    //if somehow everything fails.
+    $emails = $connection->get__data();
+}
 $emailCount = sizeof($emails);
-
-echo '<pre>';
-var_dump($_GET);
-echo '<pre/>';
-
+$_SESSION['emailCount'] = $emailCount;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +83,7 @@ echo '<pre/>';
             <thead style="background-color:grey;">
                 <tr>
                     <th colspan="5">
-                        <input type="text" name="search">
+                        <input type="text" name="search" value="<?php echo $searchValue; ?>">
                         <button type="submit">search</button>
                     </th>
                 </tr>
@@ -58,7 +93,7 @@ echo '<pre/>';
                         <button type="">Sort</button>
                     </th>
                     <th>
-                        <select name="email_select" >
+                        <select name="email_select" onchange="this.form.submit()" >
                             <option  style="display: none" >
                                 <?php echo isset($_GET["email_select"]) ? $_GET["email_select"] : "select" ?>
                             </option>
@@ -68,7 +103,6 @@ echo '<pre/>';
                             <option value="Outlook.com">Outlook</option>
                             <option value="inbox.lv">inbox</option>
                         </select>
-                        <button type="submit">Sort</button>
                     </th>
                     <th><button>Sort by date</button></th>
                     <th>xx1</th>
@@ -97,7 +131,7 @@ echo '<pre/>';
                 <th>
                     <button
                     onclick="(function(){
-                        document.getElementById('deleteSingle').value = '<?php echo $emails[$i]['ID'];?>';
+                        document.getElementById('deleteSingle').value = '<?php echo $emails[$i]['ID']; ?>';
                         })()">delete</button>
                 </th>
             </tr>
@@ -107,8 +141,15 @@ echo '<pre/>';
             <tr>
                 <th id="emailCount"><?php echo $emailCount; ?></th>
                 <th>
-                    <button name="back">&#8656</button>
-                    <button name="next">&#8658</button>
+                    <input type="hidden" id="pageValues" name="btnPushed" value="">
+                    <button id="backBtn" <?php if ($currentState == 0) {echo "disabled";}?>>&#8656</button>
+                    <select onchange="this.form.submit()" name="selectedEmailCount" id="selectedEmailCount" >
+                        <option style="display: none"><?php echo $selectedEmailCount ?></option>
+                        <option value="10">10</option>
+                        <option value="30">30</option>
+                        <option value="60">60</option>
+                    </select>
+                    <button id="nextBtn">&#8658</button>
                 </th>
                 <th>placeholder</th>
                 <th>
@@ -128,7 +169,30 @@ echo '<pre/>';
     const allCheckboxes = document.getElementsByClassName("SelectCheckbox");
     const displayedEmailsCount = document.getElementById("emailCount").innerText;
     const deleteMultiple = document.getElementById("deleteMultiple");
-    
+
+    const pageValues = document.getElementById("pageValues");
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const selectedEmailCount = document.getElementById("selectedEmailCount").value;
+
+
+    if(displayedEmailsCount < selectedEmailCount){
+        nextBtn.disabled = true;
+    }
+
+
+
+    nextBtn.onclick = function nextPage(){
+        pageValues.value = "next";
+    }
+    backBtn.onclick = function nextPage(){
+        pageValues.value = "back";
+    }
+
+
+
+
     selectAll.onclick = function SetAllCheckbox() {
     if (selectAll.checked === true) {
         for (let index = 0; index < displayedEmailsCount; index++) {
@@ -154,7 +218,6 @@ echo '<pre/>';
     deleteMultiple.value = statement;
     //add value to form dummy input
     //   event.preventDefault();
-    console.log(statement);
     };
 </script>
 
